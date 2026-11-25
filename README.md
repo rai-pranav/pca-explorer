@@ -36,11 +36,11 @@ References: [Cunningham & Yu (2014)](https://www.nature.com/articles/nn.3776) an
 
 ## Publish on GitHub Pages
 
-This folder is a standalone copy, without the original Git history or Sites hosting configuration. The application files and numerical tests are unchanged. No Git repository has been initialized here as part of this preparation.
+This folder is a standalone copy, without the original Git history or Sites hosting configuration. The application files and numerical tests are unchanged.
 
-Use a project repository named `pca-explorer` under your personal GitHub account. Its default Pages URL will be `https://YOUR_USERNAME.github.io/pca-explorer/`. This lets the app coexist with an existing profile website. Replace `YOUR_USERNAME` below with your GitHub username.
+Use the project repository `rai-pranav/pca-explorer`. Its default Pages URL will be `https://rai-pranav.github.io/pca-explorer/`. This lets the app coexist with an existing profile website.
 
-1. On GitHub, create an empty public repository called `pca-explorer`. Leave the README, license and gitignore options unselected because the local folder already contains files. Public repositories support Pages on GitHub Free.
+1. On GitHub, create an empty public repository called `pca-explorer` under the **rai-pranav** account. Leave the README, license and gitignore options unselected because the local folder already contains files. Public repositories support Pages on GitHub Free.
 2. Initialize and push from this folder:
 
    ```sh
@@ -49,9 +49,11 @@ Use a project repository named `pca-explorer` under your personal GitHub account
    git branch -M main
    git add .
    git commit -m "Add interactive PCA explorer"
-   git remote add origin https://github.com/YOUR_USERNAME/pca-explorer.git
+   git remote add origin https://github.com/rai-pranav/pca-explorer.git
    git push -u origin main
    ```
+
+   If Git is already initialized, the initial commit exists, and `origin` is already correct, skip initialization and run only `git push -u origin main`. If an existing `origin` needs correcting, use `git remote set-url origin https://github.com/rai-pranav/pca-explorer.git`.
 
 3. In the GitHub repository, open **Settings → Pages → Build and deployment → Source**, and select **GitHub Actions**.
 4. Open **Actions → Deploy PCA explorer to GitHub Pages → Run workflow**, choose `main`, and run it. This starts deployment after Pages is enabled, even if the first push ran before the setting was configured.
