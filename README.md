@@ -59,7 +59,9 @@ Use the project repository `rai-pranav/pca-explorer`. Its default Pages URL will
 4. Open **Actions → Deploy PCA explorer to GitHub Pages → Run workflow**, choose `main`, and run it. This starts deployment after Pages is enabled, even if the first push ran before the setting was configured.
 5. Wait for the workflow to succeed. Open **Settings → Pages → Visit site** for the exact published URL. The first publication can take several minutes.
 
-The workflow in `.github/workflows/pages.yml` runs the numerical tests and uploads the contents of `dist/` directly. There is no package installation or compilation step. Relative asset URLs support the `/pca-explorer/` subpath. Pushes to `main` deploy later updates automatically.
+The workflow in `.github/workflows/pages.yml` runs the numerical tests and uploads the contents of `dist/` directly. A separate deployment job waits for the upload job and includes a ten-second buffer for GitHub's artifact listing to update. This mitigates the [reported artifact visibility delay](https://github.com/actions/deploy-pages/issues/451); it does not guarantee that GitHub will always return the artifact immediately. There is no package installation or compilation step. Relative asset URLs support the `/pca-explorer/` subpath. Pushes to `main` deploy later updates automatically.
+
+If an older run failed with `No artifacts named "github-pages"`, commit and push the updated workflow to start a new run. Re-running the old run continues to use its old workflow definition. The Node deprecation warnings are separate from this missing-artifact failure.
 
 To update the app, edit the files in `dist/`, run `node --test tests/pca-math.test.mjs`, preview locally, then commit and push. Keep `dist/` tracked: it contains the maintained source files, rather than generated build output.
 

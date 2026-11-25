@@ -13,27 +13,35 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Check PCA mathematics
+        run: node --test tests/pca-math.test.mjs
+      # dist already contains the complete static app; no build is required.
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out source
-        uses: actions/checkout@v6
-      - name: Check PCA mathematics
-        run: node --test tests/pca-math.test.mjs
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      # dist already contains the complete static app; no build is required.
-      - name: Upload website
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: dist
+      # Artifact listing can lag behind a successful upload (actions/deploy-pages#451).
+      # Separate jobs and a short buffer reduce that race; this is a workaround.
+      - name: Allow artifact listing to update
+        run: sleep 10
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
