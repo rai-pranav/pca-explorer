@@ -1,0 +1,7 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*.log
+.venv/
+node_modules/
+# The app is maintained directly in dist; keep dist tracked.

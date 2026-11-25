@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Rotate a synthetic population, find its principal axes, and see how PCA projects three measured variables into two scores.">
+  <title>PCA explorer · ACNEI / IBL</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="page-header">
+      <div class="eyebrow">ACNEI / IBL <span>Teaching demonstration</span></div>
+      <h1>PCA, one step at a time</h1>
+      <p class="intro">Three measured variables. A plane that keeps the most variance.</p>
+    </header>
+
+    <main>
+      <ol class="step-track" aria-label="Teaching sequence">
+        <li data-stage="1" aria-current="step"><span>1</span>Inspect</li>
+        <li data-stage="2"><span>2</span>Centre</li>
+        <li data-stage="3"><span>3</span>Find axes</li>
+        <li data-stage="4"><span>4</span>Project</li>
+        <li data-stage="5"><span>5</span>Read scores</li>
+      </ol>
+
+      <section class="lesson" aria-labelledby="stage-title">
+        <div class="lesson-heading">
+          <div class="lesson-copy" aria-live="polite">
+            <p id="stage-count" class="stage-count">Step 1 of 5</p>
+            <h2 id="stage-title">Inspect the 3D data</h2>
+            <p id="stage-instruction">Each dot is one observation with three measured values. Rotate the cloud to inspect its shape.</p>
+          </div>
+          <div class="thickness-control">
+            <label for="noise">Data thickness <output id="noise-value" for="noise">0.08</output></label>
+            <input id="noise" type="range" min="0" max="0.6" step="0.01" value="0.08" aria-describedby="noise-help">
+            <p id="noise-help">0 gives an exact plane</p>
+          </div>
+        </div>
+
+        <div class="plot-layout" id="plot-layout">
+          <section class="scene-panel" aria-label="Three-dimensional view">
+            <div class="plot-topline">
+              <span id="scene-label">Original variables x₁, x₂, x₃</span>
+              <span class="synthetic-label">180 synthetic observations</span>
+            </div>
+            <canvas id="scene-canvas" tabindex="0" aria-label="Rotatable three-dimensional data. Drag to orbit, scroll to zoom, or focus and use arrow keys." aria-describedby="camera-hint"></canvas>
+            <div class="scene-footer">
+              <p id="camera-hint">Drag to rotate · Scroll to zoom · Click a point</p>
+              <div class="view-controls">
+                <button type="button" id="plane-view">View plane</button>
+                <button type="button" id="edge-view">View edge-on</button>
+                <button type="button" id="reset-view" aria-label="Reset camera view">Reset view</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="scores-panel" id="scores-panel" aria-labelledby="scores-title" hidden>
+            <div class="plot-topline"><h3 id="scores-title">The same points, two scores</h3></div>
+            <canvas id="scores-canvas" aria-label="Two-dimensional scatter plot of PC1 against PC2 scores"></canvas>
+            <p class="score-explanation">The orange point is the same observation in both views.</p>
+          </section>
+        </div>
+
+        <div class="projection-control" id="projection-control" hidden>
+          <label for="projection">Orthogonal projection <output id="projection-value" for="projection">0%</output></label>
+          <input id="projection" type="range" min="0" max="1" step="0.01" value="0" aria-describedby="projection-help">
+          <p id="projection-help">Move each point straight towards the plane, along PC3. Camera rotation changes only the view.</p>
+        </div>
+
+        <section class="pca-summary" id="pca-summary" aria-label="Calculated PCA results" hidden>
+          <div class="variance-summary">
+            <p class="summary-label">Variance explained</p>
+            <div class="variance-row"><span>PC1</span><div class="bar-track"><div id="variance-bar-1" class="variance-bar pc1"></div></div><output id="variance-1">0%</output></div>
+            <div class="variance-row"><span>PC2</span><div class="bar-track"><div id="variance-bar-2" class="variance-bar pc2"></div></div><output id="variance-2">0%</output></div>
+            <div class="variance-row"><span>PC3</span><div class="bar-track"><div id="variance-bar-3" class="variance-bar pc3"></div></div><output id="variance-3">0%</output></div>
+          </div>
+          <div class="retained-summary">
+            <p class="summary-label">Retaining PC1 + PC2</p>
+            <p class="retained-value" id="retained-variance">0%</p>
+            <p>Mean squared distance to the plane (a.u.²): <strong id="reconstruction-error">0</strong></p>
+          </div>
+        </section>
+
+        <section class="selected-detail" id="selected-detail" aria-live="polite" hidden>
+          <p id="selected-scores"></p>
+          <p>Scores locate an observation. Loadings describe the directions in the measured variable space.</p>
+          <details><summary>See the loading weights</summary><div id="loading-weights"></div></details>
+        </section>
+
+        <nav class="lesson-navigation" aria-label="Lesson navigation">
+          <button type="button" class="previous-button" id="previous-step" disabled>Previous</button>
+          <span id="navigation-caption">1 / 5</span>
+          <button type="button" class="next-button" id="next-step">Next: centre the cloud <span aria-hidden="true">→</span></button>
+        </nav>
+      </section>
+
+      <footer class="page-footer">
+        <p>All data are synthetic, in arbitrary units. PCA fits the original data before projection.</p>
+        <p>Keyboard: focus the 3D plot, then use arrow keys to rotate and + / − to zoom.</p>
+      </footer>
+    </main>
+  </div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
