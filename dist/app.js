@@ -24,11 +24,21 @@ function fitDataset() {
   state.model = fitPCA(state.points);
   state.reconstructed = state.points.map(point => projectPoint(point, state.model, 2).map((value, j) => value - state.model.mean[j]));
   $('noise-value').value = state.noise.toFixed(2);
-  state.model.explainedVarianceRatio.forEach((value, index) => {
-    $(`variance-${index + 1}`).value = `${(value * 100).toFixed(1)}%`;
-    $(`variance-bar-${index + 1}`).style.width = `${value * 100}%`;
+  // Each marker uses the cumulative fraction at its component count. The
+  // highlighted k=2 marker and the plane summary share the same fitted value.
+  const curve = state.model.cumulativeVarianceRatio;
+  const labels = curve.map(ratio => (ratio * 100).toFixed(1).replace(/\.0$/, '') + '%');
+  const markers = $('variance-markers').children;
+  const points = curve.map((ratio, k) => {
+    const x = 48 + 109 * k;
+    const y = 125 - 98 * ratio;
+    markers[k].setAttribute('transform', `translate(${x} ${y})`);
+    if (k > 0) markers[k].querySelector('text').textContent = labels[k];
+    return `${x},${y}`;
   });
-  $('retained-variance').textContent = `${((state.model.explainedVarianceRatio[0] + state.model.explainedVarianceRatio[1]) * 100).toFixed(1)}%`;
+  $('variance-line').setAttribute('points', points.join(' '));
+  $('variance-description').textContent = `Variance retained with one, two and three components: ${labels.slice(1).join(', ')}.`;
+  $('retained-variance').textContent = labels[2];
   const error = reconstructionError(state.points, state.model, 2);
   $('reconstruction-error').textContent = error < 1e-12 ? '0' : error.toFixed(4);
   updateSelectedDetail();
@@ -246,4 +256,7 @@ function selectNearest(points,x,y) {
 scoreCanvas.addEventListener('click',event=>{const rect=scoreCanvas.getBoundingClientRect();selectNearest(state.scorePoints,event.clientX-rect.left,event.clientY-rect.top);});
 new ResizeObserver(render).observe($('plot-layout'));
 fitDataset();
-setStage(1);
+// A direct chart link opens the first lesson stage where the fitted curve is visible.
+const previewVariance = location.hash === '#variance-curve';
+setStage(previewVariance ? 3 : 1);
+if (previewVariance) requestAnimationFrame(() => $('variance-curve').scrollIntoView({ block: 'center' }));

@@ -99,3 +99,13 @@ test('invalid observations and component counts are rejected', () => {
   const model = fitPCA([[0, 0, 0], [1, 1, 1]]);
   assert.throws(() => projectPoint([1, 2, 3], model, 4), /component/i);
 });
+
+test('retained variance accumulates by component count, including a zero baseline', () => {
+  // Independent axis pairs give variance in the exact proportions 9:4:1.
+  const points = [[3,0,0], [-3,0,0], [0,2,0], [0,-2,0], [0,0,1], [0,0,-1]];
+  const expected = [0, 9 / 14, 13 / 14, 1];
+  const curve = fitPCA(points).cumulativeVarianceRatio;
+  assert.equal(curve.length, expected.length);
+  expected.forEach((ratio, k) => close(curve[k], ratio));
+  assert.deepEqual(fitPCA([[1,1,1], [1,1,1]]).cumulativeVarianceRatio, [0,0,0,0]);
+});

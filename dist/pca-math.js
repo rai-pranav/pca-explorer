@@ -92,6 +92,7 @@ function symmetricEigen(matrix) {
 /** Fit ordinary, mean-centered PCA with sample covariance (denominator n−1).
  * Rows are observations and columns are the three measured variables.
  * The returned components are unit loading vectors, one array per PC.
+ * cumulativeVarianceRatio[k] is the fraction retained by the first k components.
  */
 export function fitPCA(points) {
   if (!Array.isArray(points) || points.length < 2) {
@@ -111,9 +112,13 @@ export function fitPCA(points) {
   const components = pairs.map(pair => pair.vector);
   const totalVariance = eigenvalues.reduce((sum, value) => sum + value, 0);
   const explainedVarianceRatio = eigenvalues.map(value => totalVariance > 0 ? value / totalVariance : 0);
+  const cumulativeVarianceRatio = [0];
+  for (const ratio of explainedVarianceRatio) {
+    cumulativeVarianceRatio.push(cumulativeVarianceRatio.at(-1) + ratio);
+  }
   const scores = centered.map(point => components.map(component =>
     point.reduce((sum, value, axis) => sum + value * component[axis], 0)));
-  return { mean, centered, covariance, components, eigenvalues, explainedVarianceRatio, scores };
+  return { mean, centered, covariance, components, eigenvalues, explainedVarianceRatio, cumulativeVarianceRatio, scores };
 }
 
 /** Reconstruct a point from the first k scores in the original variable coordinates.

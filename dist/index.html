@@ -70,10 +70,30 @@
 
         <section class="pca-summary" id="pca-summary" aria-label="Calculated PCA results" hidden>
           <div class="variance-summary">
-            <p class="summary-label">Variance explained</p>
-            <div class="variance-row"><span>PC1</span><div class="bar-track"><div id="variance-bar-1" class="variance-bar pc1"></div></div><output id="variance-1">0%</output></div>
-            <div class="variance-row"><span>PC2</span><div class="bar-track"><div id="variance-bar-2" class="variance-bar pc2"></div></div><output id="variance-2">0%</output></div>
-            <div class="variance-row"><span>PC3</span><div class="bar-track"><div id="variance-bar-3" class="variance-bar pc3"></div></div><output id="variance-3">0%</output></div>
+            <p class="summary-label" id="variance-heading">Cumulative variance explained</p>
+            <svg id="variance-curve" viewBox="0 0 420 176" role="img" aria-labelledby="variance-heading variance-description">
+              <desc id="variance-description"></desc>
+              <g class="variance-grid">
+                <path d="M48 27H375 M48 76H375 M48 125H375"/>
+              </g>
+              <g class="variance-ticks" text-anchor="end">
+                <text x="39" y="31">100%</text>
+                <text x="39" y="80">50%</text>
+                <text x="39" y="129">0%</text>
+              </g>
+              <polyline id="variance-line"/>
+              <g id="variance-markers">
+                <g><circle r="3.5"/></g>
+                <g><circle r="4"/><text y="-10"></text></g>
+                <g class="plane-marker"><circle r="5.5"/><text y="-10"></text></g>
+                <g><circle r="4"/><text y="-10"></text></g>
+              </g>
+              <g class="variance-ticks" text-anchor="middle">
+                <text x="48" y="146">0</text><text x="157" y="146">1</text>
+                <text x="266" y="146">2</text><text x="375" y="146">3</text>
+                <text x="211.5" y="169">Number of components kept</text>
+              </g>
+            </svg>
           </div>
           <div class="retained-summary">
             <p class="summary-label">Retaining PC1 + PC2</p>

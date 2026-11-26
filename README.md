@@ -4,6 +4,9 @@ A small teaching application for the ACNEI neural-manifolds workshop. It uses de
 
 The interface separates rotating the camera from changing the data or projecting them. Its five stages cover the measured cloud, mean subtraction, principal axes, orthogonal projection, and the two-dimensional score plot. The mean-centered sample covariance is decomposed by a three-dimensional symmetric Jacobi eigensolver in `dist/pca-math.js`.
 
+From **Find axes** onward, the cumulative variance curve shows how much variance the first zero, one, two or three components retain. The highlighted two-component point corresponds to the fitted plane. Change the data thickness to update the curve. Append `#variance-curve` to the app URL to open that view directly.
+
+
 ## Local use
 
 No package installation or network dependency is needed. From this folder:
